@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ferretdb-chart.fullname" . }}
+  labels:
+    app: {{ include "ferretdb-chart.name" . }}
+spec:
+  replicas: {{ .Values.ferretdb.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "ferretdb-chart.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "ferretdb-chart.name" . }}
+    spec:
+      containers:
+        - name: ferretdb
+          image: "{{ .Values.ferretdb.image.repository }}:{{ .Values.ferretdb.image.tag }}"
+          imagePullPolicy: {{ .Values.ferretdb.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.ferretdb.service.port }}
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "pg-db.secretName" . }}
+                  optional: true
+                  key: host
+            - name: FERRETDB_POSTGRESQL_URL
+              value: postgres://postgres@$(POSTGRES_HOST):5432/ferretdb
+
+      initContainers:
+        - name: wait-for-secret
+          image: "{{ .Values.ferretdb.initContainerImage.repository }}:{{ .Values.ferretdb.initContainerImage.tag }}"
+          imagePullPolicy: {{ .Values.ferretdb.initContainerImage.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for secret {{ include "pg-db.secretName" . }}-pguser-ferretuser"
+              while true; do
+                POSTGRES_HOST=$(kubectl get secret {{ include "pg-db.secretName" . }} -o jsonpath="{.data.host}" | base64 --decode)
+                if [ -n "$POSTGRES_HOST" ]; then
+                  echo "Secret is available."
+                  break
+                else
+                  echo "Secret not found. Sleeping for 5 seconds..."
+                  sleep 5
+                fi
+              done
+      serviceAccountName: {{ include "ferretdb-chart.fullname" . }}-sa
+---
+# Service Account for the Pod
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "ferretdb-chart.fullname" . }}-sa
+  labels:
+    app: {{ include "ferretdb-chart.name" . }}
+---
+# Role granting permissions to get secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "ferretdb-chart.fullname" . }}-role
+  labels:
+    app: {{ include "ferretdb-chart.name" . }}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+---
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "ferretdb-chart.fullname" . }}-rolebinding
+  labels:
+    app: {{ include "ferretdb-chart.name" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "ferretdb-chart.fullname" . }}-sa
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "ferretdb-chart.fullname" . }}-role
+  apiGroup: rbac.authorization.k8s.io

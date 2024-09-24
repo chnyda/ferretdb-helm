@@ -1,0 +1,6 @@
+dependencies:
+- name: pg-db
+  repository: https://percona.github.io/percona-helm-charts/
+  version: 2.4.3
+digest: sha256:a91f78ecd37278ad9fc7b16922f39e0f40d79fb2fc38d8ba9ed9877b09d11434
+generated: "2024-09-24T14:57:44.205104+02:00"
