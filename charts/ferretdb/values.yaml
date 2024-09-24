@@ -1,0 +1,18 @@
+ferretdb:
+  image:
+    repository: ghcr.io/ferretdb/ferretdb
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  service:
+    type: ClusterIP 
+    port: 27017
+  initContainerImage:
+    repository: bitnami/kubectl
+    tag: latest
+    pullPolicy: IfNotPresent
+pg-db:
+  users:
+    - name: ferretuser
+      databases:
+        - ferretdb
