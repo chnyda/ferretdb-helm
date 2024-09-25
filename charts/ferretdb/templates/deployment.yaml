@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ferretdb-chart.fullname" . }}
+  name: {{ include "ferretdb-chart.fullname" . }}-ferretdb
   labels:
     app: {{ include "ferretdb-chart.name" . }}
 spec:
