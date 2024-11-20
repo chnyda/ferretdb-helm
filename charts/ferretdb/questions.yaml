@@ -1,0 +1,22 @@
+questions:
+- variable: ferretdb.service.type
+  type: enum
+  description: "Kubernetes Kubernetes service type. LoadBalancer to expose outside of Kubernetes."
+  options:
+  - LoadBalancer
+  - NodePort
+  - ClusterIP
+
+- variable: pg-db.users[0].name
+  default: "ferretuser"
+  description: "Username for the PostgreSQL database."
+  type: string
+  label: "PostgreSQL Username"
+  required: true
+
+- variable: pg-db.users[0].databases[0]
+  default: "ferretdb"
+  description: "Database name for the PostgreSQL user."
+  type: string
+  label: "PostgreSQL Database Name"
+  required: true
