@@ -24,7 +24,7 @@ spec:
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "pg-db.secretName" . }}
+                  name: {{ include "pgdb.secretName" . }}
                   optional: true
                   key: host
             - name: FERRETDB_POSTGRESQL_URL
@@ -38,9 +38,9 @@ spec:
             - sh
             - -c
             - |
-              echo "Waiting for secret {{ include "pg-db.secretName" . }}-pguser-ferretuser"
+              echo "Waiting for secret {{ include "pgdb.secretName" . }}-pguser-ferretuser"
               while true; do
-                POSTGRES_HOST=$(kubectl get secret {{ include "pg-db.secretName" . }} -o jsonpath="{.data.host}" | base64 --decode)
+                POSTGRES_HOST=$(kubectl get secret {{ include "pgdb.secretName" . }} -o jsonpath="{.data.host}" | base64 --decode)
                 if [ -n "$POSTGRES_HOST" ]; then
                   echo "Secret is available."
                   break

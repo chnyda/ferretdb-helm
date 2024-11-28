@@ -1,0 +1,31 @@
+{{- $colorReset := "\u001b[0m" -}}
+{{- $colorRed := "\u001b[31m" -}}
+{{- $colorYellow := "\u001b[33m" -}}
+{{- $colorBlue := "\u001b[34m" -}}
+
+{{ $colorRed }}---------------------------------------------------{{ $colorReset }}
+Thank you for installing {{ $colorYellow }}{{ .Chart.Name }}{{ $colorReset }}.
+
+Your release is named {{ $colorYellow }}{{ .Release.Name }}{{ $colorReset }} in namespace {{ $colorYellow }}{{ .Release.Namespace }}{{ $colorReset }}.
+
+{{ $colorRed }}To connect to your DB, you could need:{{ $colorReset }}
+
+Your password is NOT displayed here from security reasons.
+You can find it via:
+{{ $colorBlue }}$ kubectl get secret {{ include "pgdb.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 --decode{{ $colorReset }}
+
+Your database name: {{ index (index .Values.pgdb.users 0).databases 0 }}
+You can find it via:
+{{ $colorBlue }}$ kubectl get secret {{ include "pgdb.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath="{.data.dbname}" | base64 --decode{{ $colorReset }}
+
+Your username: {{ (index .Values.pgdb.users 0).name }}
+You can find it via:
+{{ $colorBlue }}$ kubectl get secret {{ include "pgdb.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath="{.data.user}" | base64 --decode{{ $colorReset }}
+
+Your Java Database Connectivity (JDBC) URI string is NOT displayed here from security reasons (consists password).
+You can find it via:
+{{ $colorBlue }}$ kubectl get secret {{ include "pgdb.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath="{.data.jdbc-uri}" | base64 --decode{{ $colorReset }}
+
+Your PgBouncer URI string is NOT displayed here from security reasons (consists password).
+You can find it via:
+{{ $colorBlue }}$ kubectl get secret {{ include "pgdb.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath="{.data.pgbouncer-uri}" | base64 --decode{{ $colorReset }}

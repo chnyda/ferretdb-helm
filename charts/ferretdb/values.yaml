@@ -11,7 +11,7 @@ ferretdb:
     repository: bitnami/kubectl
     tag: latest
     pullPolicy: IfNotPresent
-pg-db:
+pgdb:
   users:
     - name: ferretuser
       databases:
