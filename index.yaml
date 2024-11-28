@@ -3,6 +3,20 @@ entries:
   ferretdb:
   - apiVersion: v2
     appVersion: 1.24.0
+    created: "2024-11-28T14:27:47.676672497Z"
+    dependencies:
+    - alias: pgdb
+      name: pg-db
+      repository: https://percona.github.io/percona-helm-charts/
+      version: 2.4.3
+    description: A Helm chart for deploying FerretDB with PostgreSQL
+    digest: 4c5f5067a1cccbabce0b03ca653ff1be280cdb2fdde1d258a101ffcace390811
+    name: ferretdb
+    urls:
+    - ferretdb-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 1.24.0
     created: "2024-11-20T09:53:35.334390357Z"
     dependencies:
     - name: pg-db
@@ -79,4 +93,4 @@ entries:
     urls:
     - ferretdb-0.1.1.tgz
     version: 0.1.1
-generated: "2024-11-20T09:53:35.334417768Z"
+generated: "2024-11-28T14:27:47.676720877Z"
