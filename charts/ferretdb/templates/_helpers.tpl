@@ -22,9 +22,9 @@ Return the chart's fullname.
 {{- end -}}
 
 {{/*
-Return the pg-db secret name.
+Return the pgdb secret name.
 */}}
-{{- define "pg-db.secretName" -}}
-{{- printf "%s-pg-db-pguser-ferretuser" .Release.Name -}}
+{{- define "pgdb.secretName" -}}
+{{- printf "%s-pgdb-pguser-ferretuser" .Release.Name -}}
 {{- end -}}
 
